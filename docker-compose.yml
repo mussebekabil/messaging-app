@@ -55,3 +55,11 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - project.env
+  ws-messaging-service:
+    build: ws-messaging-service
+    image: ws-messaging-service
+    restart: "no"
+    volumes:
+      - ./ws-messaging-service/:/app
+    depends_on:
+      - api
