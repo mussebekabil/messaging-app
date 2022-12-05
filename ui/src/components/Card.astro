@@ -2,13 +2,14 @@
 import Voter from './Voter.jsx';
 import MessageForm from './MessageForm.jsx';
 
-const { id, href, title, body, vote } = Astro.props;
+const { id, href, title, body, vote, date } = Astro.props;
 ---
 	<div id={id} class="link-card">
 		<a href={href || "#"}>
 			<p>
 				{body}
 			</p>
+			<span class="date-container">{new Date(date).toLocaleString()}</span>
 		</a>
 		<div class="vote-container">
 			<Voter vote={vote} messageId={id} client:visible />
@@ -32,13 +33,20 @@ const { id, href, title, body, vote } = Astro.props;
 		margin-top: 0.5rem;
 	}
 
+	.date-container{
+		margin-top: auto;
+		align-self: flex-end;
+		font-size: 0.7rem;
+		opacity: 0.8;
+	}
+
 	.link-card > a {
 		width: 100%;
 		display: flex;
+		flex-direction: column;
 		text-decoration: none;
 		line-height: 1.4;
 		padding: 1rem 1.3rem;
-		/* border-radius: 0.35rem; */
 		border-top-left-radius: 0.35rem;
 		border-bottom-left-radius: 0.35rem;
 		color: #111;
@@ -55,7 +63,7 @@ const { id, href, title, body, vote } = Astro.props;
 		margin-top: 0.5rem;
 		margin-bottom: 0;
 		color: #444;
-		width: 90%;
+		width: 100%;
 	}
 	.link-card:is(:hover, :focus-within) {
 		background-position: 0;

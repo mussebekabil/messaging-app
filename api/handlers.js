@@ -1,5 +1,6 @@
 import * as messageServices from './database/messageServices.js';
 import * as userServices from './database/userServices.js';
+import * as queueServices from './queueServices.js';
 
 export const handleGetRequests = async (request) => {
   const pathname = new URL(request.url).pathname;
@@ -40,7 +41,8 @@ export const handlePostRequests = async (request) => {
     if(request.body) {
       try {
         const { authorId, content } = await request.json();
-        await messageServices.saveMessage(authorId, content);
+        //await messageServices.saveMessage(authorId, content);
+        queueServices.publishNewMessage(authorId, content);
         return new Response(200);
         
       } catch (error) {
@@ -75,8 +77,8 @@ export const handlePatchRequests = async (request) => {
         const { vote } = await request.json();
         const params = pathname.split('/')
         const messageId = params[3];
-        await messageServices.updateMessageVote(messageId, vote);
-  
+        //await messageServices.updateMessageVote(messageId, vote);
+        queueServices.publishMessageVote(messageId, vote);
         return new Response(200);
         
       } catch (error) {

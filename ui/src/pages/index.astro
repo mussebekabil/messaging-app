@@ -17,7 +17,7 @@ console.log(messages)
 				<MessageForm messageId="" placeholder="Share your thoughts" client:visible />
 			</div>
 			<ul role="list" class="link-card-grid">
-				{messages.map(({ id, author_id, content, vote}) => {
+				{messages.map(({ id, author_id, content, vote, created_at}) => {
 					return (
 						<li>
 							<Card
@@ -26,6 +26,7 @@ console.log(messages)
 								title={author_id}
 								body={content}
 								vote={vote}
+								date={created_at}
 							/>
 						</li>
 				)})}

@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 	))
 }
 
-const {id, content, author_id, vote } = Astro.props;
+const {id, content, author_id, vote, created_at } = Astro.props;
 ---
 <!-- <script>
 	import { disableReSubmission, initWsConnection } from '../../utils/scripts.js';
@@ -34,6 +34,7 @@ const {id, content, author_id, vote } = Astro.props;
 			title={author_id}
 			body={content}
 			vote={vote}
+			date={created_at}
 		/>
 		<div class="message-card">
 			<MessageForm placeholder="Reply your thoughts" messageId={id} client:visible />

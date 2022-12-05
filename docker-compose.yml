@@ -41,6 +41,7 @@ services:
     depends_on:
       - database
       - flyway
+      - rabbitmq
     env_file:
       - project.env
 
@@ -68,3 +69,26 @@ services:
       - ./ws-messaging-service/:/app
     depends_on:
       - api
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  messaging:
+    build: messaging-service
+    image: messaging-service
+    restart: "no"
+    # volumes:
+    #   - ./api/:/app
+    # ports:
+    #   - 7777:7777
+    depends_on:
+      - database
+      - flyway
+      - rabbitmq
+    env_file:
+      - project.env

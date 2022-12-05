@@ -11,6 +11,7 @@
   border: 1px solid rgba(var(--accent), 35%);
   border-radius: 0.4em;
   font-size: 1em;
+  padding: 0.5em;
 }
 
 .form-container button {
