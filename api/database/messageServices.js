@@ -26,3 +26,10 @@ export const saveMessage = async (authorId, content) => {
     { authorId, content },
   );
 };
+
+export const updateMessageVote = async (messageId, vote) => {
+  await executeQuery(
+    "UPDATE messages SET vote=$vote WHERE id=$messageId;",
+    { messageId, vote },
+  );
+};

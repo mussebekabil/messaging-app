@@ -1,0 +1,72 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
+import MessageForm from '../../components/MessageForm.jsx';
+
+
+export async function getStaticPaths() {
+	const response = await fetch('http://api:7777/messages');
+	const { messages } = await response.json();
+	
+	return messages.map((message) => ({
+			params: { slug: message.id },
+			props: {...message}
+		}
+	))
+}
+
+const {id, content, author_id, vote } = Astro.props;
+---
+<!-- <script>
+	import { disableReSubmission, initWsConnection } from '../../utils/scripts.js';
+	
+	// Initialize websocket 
+	initWsConnection()
+	
+	// Show grade and disable submission if exercise is already submitted
+	disableReSubmission();
+
+</script> -->
+<Layout title="Welcome to messaging app">
+	<main>
+		<Card
+			id={id}
+			title={author_id}
+			body={content}
+			vote={vote}
+		/>
+		<div class="message-card">
+			<MessageForm placeholder="Reply your thoughts" messageId={id} client:visible />
+		</div>
+	</main>
+</Layout>
+
+
+<style>
+.grade-container{
+	display: none;
+}
+
+.grade-container.active {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.grade-container.pass {
+  background-color: green;
+}
+
+.grade-container.fail {
+  background-color: orange;
+}
+
+.grade-container.error {
+  background-color: red;
+}
+</style>
+
+

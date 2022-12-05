@@ -6,7 +6,7 @@ CREATE TABLE messages (
   id SERIAL PRIMARY KEY,
   author_id VARCHAR ( 50 ) NOT NULL,
   content TEXT NOT NULL,
-  vote INT,
+  vote INT DEFAULT 0,
   CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id)
 );
 

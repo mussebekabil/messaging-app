@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Wrapper from '../components/Wrapper.jsx';
+import MessageForm from '../components/MessageForm.jsx';
+
+
+const response = await fetch('http://api:7777/messages');
+const { messages } = await response.json();
+console.log(messages)
+---
+
+<Layout title="Welcome to messaging app">
+	<main>
+		<!-- <Wrapper client:visible> -->
+			<div class="message-card">
+				<MessageForm messageId="" placeholder="Share your thoughts" client:visible />
+			</div>
+			<ul role="list" class="link-card-grid">
+				{messages.map(({ id, author_id, content, vote}) => {
+					return (
+						<li>
+							<Card
+								id={id}
+								href={`messages/${id}`}
+								title={author_id}
+								body={content}
+								vote={vote}
+							/>
+						</li>
+				)})}
+			</ul>
+		<!-- </Wrapper> -->
+	</main>
+</Layout>

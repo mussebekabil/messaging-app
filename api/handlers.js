@@ -3,7 +3,7 @@ import * as userServices from './database/userServices.js';
 
 export const handleGetRequests = async (request) => {
   const pathname = new URL(request.url).pathname;
-  console.log(pathname)
+  
   if(pathname.includes('messages')) {
     const params = pathname.split('/')
     console.log(params)
@@ -58,7 +58,29 @@ export const handlePostRequests = async (request) => {
         return new Response(200);
         
       } catch (error) {
-        console.log(e)
+        return new Response("Internal Server Error", { status: 500 })
+      }
+    }
+  }
+
+  return new Response("Internal Server Error - Path not found", { status: 500 })
+}
+
+export const handlePatchRequests = async (request) => {
+  const pathname = new URL(request.url).pathname;
+
+  if(pathname.includes('messages')) {
+    if(request.body) {
+      try {
+        const { vote } = await request.json();
+        const params = pathname.split('/')
+        const messageId = params[3];
+        await messageServices.updateMessageVote(messageId, vote);
+  
+        return new Response(200);
+        
+      } catch (error) {
+        console.log(error)
         return new Response("Internal Server Error", { status: 500 })
       }
     }
