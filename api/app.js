@@ -1,5 +1,5 @@
 import { serve } from "./deps.js";
-import { handleGetRequests, handlePostRequests } from './handlers.js'
+import { handleGetRequests, handlePostRequests, handlePatchRequests } from './handlers.js'
 
 const handleRequest = async (request) => {
   switch(request.method){
@@ -7,8 +7,8 @@ const handleRequest = async (request) => {
       return handlePostRequests(request);
     case 'GET':
       return new Response(JSON.stringify(await handleGetRequests(request)));
-    case 'PUT': 
-      return;
+    case 'PATCH': 
+      return handlePatchRequests(request);
     default:
       return;
   }

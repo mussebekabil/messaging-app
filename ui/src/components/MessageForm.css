@@ -1,0 +1,26 @@
+.form-container {
+  display: flow-root;
+  width: 100%;
+  background-color: white;
+  margin: 1.5rem;
+}
+
+.form-container textarea {
+  width: 99%;
+  height: 6vh;
+  border: 1px solid rgba(var(--accent), 35%);
+  border-radius: 0.4em;
+  font-size: 1em;
+  padding: 0.5em;
+}
+
+.form-container button {
+  float: right;
+  margin-top: 0.5rem;
+}
+
+.form-submitted-message {
+  margin-bottom: 1em;
+  color: red;
+}
+
