@@ -7,7 +7,7 @@ const createWebSocketConnection = (request, userId) => {
   
   socket.onopen = () => socket.send(JSON.stringify({"id": userId}))
   socket.onmessage = (e) => console.log(`Received a message: ${e.data}`);
-
+  
   socket.onclose = (code, reason) => {
     if(sockets.get(userId)) {
       console.log("WS closed code: ", code);
@@ -26,17 +26,17 @@ const createWebSocketConnection = (request, userId) => {
 const handleRequest = async (request) => {
   const {pathname, search } = new URL(request.url);
   const queries = search.substring(1).split('&');
-  const userId = queries[0];
-  if (pathname === "/grade" && Object.keys(sockets).includes(userId)) {
-    sockets[userId].send(JSON.stringify({ 
-      userId,
-      exerciseId: queries[1],
-      result: queries[2]
-    }))
-  } else if (pathname === "/connect") {
 
+  if (pathname === "/connect") {
     return createWebSocketConnection(request, queries[0]);
   }
+  
+  if (request.method === 'POST') {
+    const body = await request.json();
+    sockets.forEach((socket, key) => socket.send(
+      JSON.stringify({ key, ...body
+    })))
+  } 
 
   return new Response(200);
 };

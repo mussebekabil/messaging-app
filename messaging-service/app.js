@@ -1,39 +1,47 @@
 import { rabbitConnect } from "./deps.js";
 import * as messageServices from './database/messageServices.js';
+import * as constants from './constants.js'; 
 
-const url = 'amqp://guest:guest@rabbitmq:5672';
-const messageQueueName = "message.queue";
-const replyQueueName = "reply.queue";
-const messageVoteQueueName = "message.vote.queue";
-const replyVoteQueueName = "reply.vote.queue";
-
-const connection = await rabbitConnect(url) 
+const connection = await rabbitConnect(constants.URL) 
 const channel = await connection.openChannel();
 
-await channel.declareQueue({ queue: messageQueueName });
-await channel.consume({ queue: messageQueueName }, async (args, props, data) => {
+await channel.declareQueue({ queue: constants.MESSAGE_QUEUE_NAME });
+await channel.consume({ queue: constants.MESSAGE_QUEUE_NAME }, async (args, props, data) => {
   const { authorId, content } = JSON.parse(new TextDecoder().decode(data));
-  await messageServices.saveMessage(authorId, content)
+  const response = await messageServices.saveMessage(authorId, content)
+  console.log('response: ', response)
+  await fetch(`http://ws-messaging-service:7779`, {
+    method: 'POST',
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+		body: JSON.stringify({ ...response, type: constants.MESSAGE_TYPE, authorId, content })
+  });
+
   await channel.ack({ deliveryTag: args.deliveryTag });
 });
 
-await channel.declareQueue({ queue: replyQueueName });
-await channel.consume({ queue: replyQueueName }, async (args, props, data) => {
+await channel.declareQueue({ queue: constants.REPLY_QUEUE_NAME });
+await channel.consume({ queue: constants.REPLY_QUEUE_NAME }, async (args, props, data) => {
   console.log(JSON.stringify(args.routingKey));
   console.log(JSON.stringify(props));
   console.log(new TextDecoder().decode(data));
   await channel.ack({ deliveryTag: args.deliveryTag });
 });
 
-await channel.declareQueue({ queue: messageVoteQueueName });
-await channel.consume({ queue: messageVoteQueueName }, async (args, props, data) => {
+await channel.declareQueue({ queue: constants.MESSAGE_VOTE_QUEUE_NAME });
+await channel.consume({ queue: constants.MESSAGE_VOTE_QUEUE_NAME }, async (args, props, data) => {
   const { messageId, vote } = JSON.parse(new TextDecoder().decode(data));
   await messageServices.updateMessageVote(messageId, vote);
+  await fetch(`http://ws-messaging-service:7779`, {
+    method: 'POST',
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+		body: JSON.stringify({ type: constants.MESSAGE_VOTE_TYPE, vote, messageId })
+  });
+  
   await channel.ack({ deliveryTag: args.deliveryTag });
 });
 
-await channel.declareQueue({ queue: replyVoteQueueName });
-await channel.consume({ queue: replyVoteQueueName }, async (args, props, data) => {
+await channel.declareQueue({ queue: constants.REPLY_VOTE_QUEUE_NAME });
+await channel.consume({ queue: constants.REPLY_VOTE_QUEUE_NAME }, async (args, props, data) => {
   console.log(JSON.stringify(args.routingKey));
   console.log(JSON.stringify(props));
   console.log(new TextDecoder().decode(data));

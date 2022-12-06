@@ -1,18 +1,13 @@
-import { rabbitConnect } from "./deps.js";
+import { rabbitConnect } from './deps.js';
+import * as constants from './constants.js'; 
 
-const url = 'amqp://guest:guest@rabbitmq:5672';
-const messageQueueName = "message.queue";
-const replyQueueName = "reply.queue";
-const messageVoteQueueName = "message.vote.queue";
-const replyVoteQueueName = "reply.vote.queue";
-
-const connection = await rabbitConnect(url) 
+const connection = await rabbitConnect(constants.URL) 
 const channel = await connection.openChannel();
 
-await channel.declareQueue({ queue: messageQueueName });
-await channel.declareQueue({ queue: replyQueueName });
-await channel.declareQueue({ queue: messageVoteQueueName });
-await channel.declareQueue({ queue: replyVoteQueueName });
+await channel.declareQueue({ queue: constants.MESSAGE_QUEUE_NAME });
+await channel.declareQueue({ queue: constants.REPLY_QUEUE_NAME });
+await channel.declareQueue({ queue: constants.MESSAGE_VOTE_QUEUE_NAME });
+await channel.declareQueue({ queue: constants.REPLY_VOTE_QUEUE_NAME });
 
 export const publisher = async (queueName, payload) => {
   try { 
@@ -27,17 +22,17 @@ export const publisher = async (queueName, payload) => {
 };
 
 export const publishNewMessage = async (authorId, content) => {
-  publisher(messageQueueName, { authorId, content })
+  publisher(constants.MESSAGE_QUEUE_NAME, { authorId, content })
 };
 
 export const publishNewReply = async (authorId, messageId, content) => {
-  publisher(replyQueueName, { authorId, messageId, content })
+  publisher(constants.REPLY_QUEUE_NAME, { authorId, messageId, content })
 };
 
 export const publishMessageVote = async (messageId, vote) => {
-  publisher(messageVoteQueueName, { messageId, vote })
+  publisher(constants.MESSAGE_VOTE_QUEUE_NAME, { messageId, vote })
 };
 
 export const publishReplyVote = async (replyId, vote) => {
-  publisher(replyVoteQueueName, { replyId, vote })
+  publisher(constants.REPLY_VOTE_QUEUE_NAME, { replyId, vote })
 };

@@ -1,10 +1,7 @@
-import { useState } from 'react';
+import React from 'react';
 import './Voter.css'; 
 
-const  Voter = ({ messageId, vote: initialVote}) => {
-	console.log('vote', parseInt(initialVote))
-	const [vote, setVote] = useState(initialVote);
-	
+const  Voter = ({ messageId, vote}) => {
 	const updateVote = async (updatedVote) => {
 		try {
 			await fetch(`/api/messages/${messageId}`, {
@@ -16,25 +13,13 @@ const  Voter = ({ messageId, vote: initialVote}) => {
 			console.log(error)
 		}
 	}
-	
-	const add = async () => {
-		const updatedVote = vote + 1;
-		await updateVote(updatedVote)
-		setVote(updatedVote)
-	};
-
-	const subtract = async () => {
-			const updatedVote = vote - 1;
-			await updateVote(updatedVote)
-			setVote(updatedVote)
-	}
 
 	return (
 		<>
 			<div className="vote">
-				<span onClick={add} className="arrow text-gradient">&#8896;</span>
+				<span onClick={() => updateVote(vote + 1)} className="arrow text-gradient">&#8896;</span>
 				<pre>{vote}</pre>
-				<span onClick={subtract} className="arrow text-gradient"> &#8897;</span>
+				<span onClick={() => updateVote(vote - 1)} className="arrow text-gradient"> &#8897;</span>
 			</div>
 		</>
 	);

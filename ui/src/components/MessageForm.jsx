@@ -6,35 +6,32 @@ import 'react-toastify/dist/ReactToastify.css';
 import './MessageForm.css';
 
 const MessageForm = ({ messageId, placeholder }) => {
-	const [reply, setReply] = useState('');
+	const [content, setContent] = useState('');
 	const [error, setError] = useState('');
 
 	const handleSubmit = async (e) => {
-	// 	e.preventDefault()
-	// 	setError('');
-	// 	if(!code) {
-	// 		setError('Please write some code before sending to the grader.')
-	// 		return;
-	// 	}
+		e.preventDefault()
+		setError('');
+		if(!content) {
+			setError('Please write some content before posting.')
+			return;
+		}
 
-	// 	try {
-	// 		await fetch("/api/grades", {
-	// 			method: "POST",
-	// 			headers: { "Content-type": "application/json; charset=UTF-8" },
-	// 			body: JSON.stringify({ 
-	// 				code,
-	// 				exerciseId,  
-	// 				userId: getUserId()
-	// 			})
-	// 		});
-	// 		setIsDisabled(true)
-			
-	// 		toast.success('Code submitted successfully. You will be notified once the grader is ready.')
-	// 		setCode('')
-	// 	} catch (error) {
-	// 		setError('Something went wrong.')
-	// 		console.log(error)
-	// 	}
+		try {
+			await fetch("/api/messages", {
+				method: "POST",
+				headers: { "Content-type": "application/json; charset=UTF-8" },
+				body: JSON.stringify({ 
+					content, 
+					authorId: getUserId()
+				})
+			});
+		
+			setContent('')
+		} catch (error) {
+			setError('Something went wrong.')
+			console.log(error)
+		}
 	}
 
 	if(error) {
@@ -47,9 +44,9 @@ const MessageForm = ({ messageId, placeholder }) => {
 			<form>
 				<textarea 
 					className="post-panel" 
-					name="reply"
-					value={reply} 
-					onChange={(e) => {setReply(e.target.value)}} 
+					name="content"
+					value={content} 
+					onChange={(e) => {setContent(e.target.value)}} 
 					placeholder={placeholder}
 				></textarea>
 				<button className="button-primary" onClick={handleSubmit}> Post </button>
