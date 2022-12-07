@@ -21,9 +21,14 @@ await channel.consume({ queue: constants.MESSAGE_QUEUE_NAME }, async (args, prop
 
 await channel.declareQueue({ queue: constants.REPLY_QUEUE_NAME });
 await channel.consume({ queue: constants.REPLY_QUEUE_NAME }, async (args, props, data) => {
-  console.log(JSON.stringify(args.routingKey));
-  console.log(JSON.stringify(props));
-  console.log(new TextDecoder().decode(data));
+  const { authorId, messageId, content } = JSON.parse(new TextDecoder().decode(data));
+  const response = await messageServices.saveMessageReply(authorId, messageId, content)
+  await fetch(`http://ws-messaging-service:7779`, {
+    method: 'POST',
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+		body: JSON.stringify({ ...response, type: constants.REPLY_TYPE, authorId, messageId, content })
+  });
+  
   await channel.ack({ deliveryTag: args.deliveryTag });
 });
 
@@ -42,9 +47,13 @@ await channel.consume({ queue: constants.MESSAGE_VOTE_QUEUE_NAME }, async (args,
 
 await channel.declareQueue({ queue: constants.REPLY_VOTE_QUEUE_NAME });
 await channel.consume({ queue: constants.REPLY_VOTE_QUEUE_NAME }, async (args, props, data) => {
-  console.log(JSON.stringify(args.routingKey));
-  console.log(JSON.stringify(props));
-  console.log(new TextDecoder().decode(data));
+  const { replyId, vote } = JSON.parse(new TextDecoder().decode(data));
+  await messageServices.updateReplyVote(replyId, vote);
+  await fetch(`http://ws-messaging-service:7779`, {
+    method: 'POST',
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+		body: JSON.stringify({ type: constants.REPLY_VOTE_TYPE, vote, replyId })
+  });
   
   await channel.ack({ deliveryTag: args.deliveryTag });
 });

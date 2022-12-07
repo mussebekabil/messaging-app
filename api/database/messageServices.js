@@ -20,16 +20,11 @@ export const getMessageById = async (messageId) => {
   return result.rows;
 };
 
-export const saveMessage = async (authorId, content) => {
-  await executeQuery(
-    "INSERT INTO messages (author_id, content) VALUES ($authorId, $content);",
-    { authorId, content },
+export const getRepliesByMessageId = async (messageId) => {
+  const result =   await executeQuery(
+    "SELECT * FROM replies WHERE message_id=$messageId ORDER BY created_at DESC;",
+    { messageId },
   );
-};
 
-export const updateMessageVote = async (messageId, vote) => {
-  await executeQuery(
-    "UPDATE messages SET vote=$vote WHERE id=$messageId;",
-    { messageId, vote },
-  );
+  return result.rows;
 };

@@ -16,7 +16,7 @@ CREATE TABLE replies (
   author_id VARCHAR ( 50 ) NOT NULL,
   message_id INT NOT NULL,
   content TEXT NOT NULL,
-  vote INT,
+  vote INT DEFAULT 0,
   created_at TIMESTAMP DEFAULT NOW(),
   CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_post FOREIGN KEY(message_id) REFERENCES messages(id) ON DELETE CASCADE ON UPDATE CASCADE

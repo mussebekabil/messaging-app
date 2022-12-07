@@ -5,10 +5,12 @@ import { getUserId } from '../utils/localStorageUtil.js';
 import 'react-toastify/dist/ReactToastify.css';
 import './MessageForm.css';
 
+
 const MessageForm = ({ messageId, placeholder }) => {
 	const [content, setContent] = useState('');
 	const [error, setError] = useState('');
-
+	const isReplyForm = messageId; 
+	
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 		setError('');
@@ -16,14 +18,15 @@ const MessageForm = ({ messageId, placeholder }) => {
 			setError('Please write some content before posting.')
 			return;
 		}
-
+		const url = isReplyForm ? '/api/replies' : '/api/messages';
 		try {
-			await fetch("/api/messages", {
+			await fetch(url, {
 				method: "POST",
 				headers: { "Content-type": "application/json; charset=UTF-8" },
 				body: JSON.stringify({ 
 					content, 
-					authorId: getUserId()
+					messageId,
+					authorId: getUserId(),
 				})
 			});
 		
@@ -47,15 +50,15 @@ const MessageForm = ({ messageId, placeholder }) => {
 					name="content"
 					value={content} 
 					onChange={(e) => {setContent(e.target.value)}} 
-					placeholder={placeholder}
+					placeholder={isReplyForm ? 'Reply for message' : 'Share your thoughts'}
 				></textarea>
-				<button className="button-primary" onClick={handleSubmit}> Post </button>
-				{/* <button className="button-secondary" 
+				<button className="button-primary" onClick={handleSubmit}> {isReplyForm ? 'Reply' : 'Post'} </button>
+				{isReplyForm && <button className="button-secondary" 
 					onClick={(e) => {
 						e.preventDefault()
 						window.location.assign('/');
 						}} 
-					> Close </button> */}
+					> Go back </button>}
 			</form>
 			<ToastContainer />
 		</div>

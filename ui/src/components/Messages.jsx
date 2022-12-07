@@ -1,13 +1,10 @@
 import React, { useEffect,useState } from 'react';
-// import { ToastContainer } from 'react-toastify';
 import { openWsConnection, closeWsConnection } from '../utils/wsUtil.js'
 import Card from './Card.jsx';
 import MessageForm from './MessageForm.jsx';
 import * as constants from '../utils/constants.js';
 
-// import 'react-toastify/dist/ReactToastify.css';
-
-const Wrapper = () => {
+const Messages = () => {
 	const [messages, setMessages] = useState([]);
 	const handleMessage = (messageEvent) => {
 		const data = JSON.parse(messageEvent.data)
@@ -17,7 +14,6 @@ const Wrapper = () => {
 					setMessages(updatedMessages)
 					break;
 				case constants.MESSAGE_TYPE:
-					
 					setMessages([
 						data,
 						...messages
@@ -32,9 +28,8 @@ const Wrapper = () => {
 
 	useEffect(() => {
 		openWsConnection(handleMessage);
-		closeWsConnection()
 	}, [messages])
-
+	
 	useEffect(() => {
 		async function fetchMessages () {
 			const response = await fetch('/api/messages');
@@ -42,8 +37,13 @@ const Wrapper = () => {
 			setMessages(messages)
 		}
 		fetchMessages()
+
+		return () => {
+			console.log('unmounted')
+			closeWsConnection()
+		}
 	}, [])
-	console.log('should re render', messages)
+
 	return (
     <div>
 			<div className="message-card">
@@ -57,5 +57,6 @@ const Wrapper = () => {
 				))}
 			</ul>
 		</div>		
-	)};
-export default Wrapper;
+	)
+};
+export default Messages;

@@ -1,10 +1,11 @@
 import React from 'react';
 import './Voter.css'; 
 
-const  Voter = ({ messageId, vote}) => {
+const  Voter = ({ messageId, replyId, vote}) => {
 	const updateVote = async (updatedVote) => {
+		const url = !!replyId ? `/api/replies/${replyId}` : `/api/messages/${messageId}`;
 		try {
-			await fetch(`/api/messages/${messageId}`, {
+			await fetch(url, {
 				method: "PATCH",
 				headers: { "Content-type": "application/json; charset=UTF-8" },
 				body: JSON.stringify({ vote: updatedVote })

@@ -1,14 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Wrapper from '../components/Wrapper.jsx';
+import Messages from '../components/Messages.jsx';
 
 // const response = await fetch('http://api:7777/messages');
 // const { messages } = await response.json();
 // console.log(messages)
 ---
-
 <Layout title="Welcome to messaging app">
 	<main>
-		<Wrapper client:load />
+		<Messages client:load />
 	</main>
 </Layout>
