@@ -1,7 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Card from '../../components/Card.jsx';
-import MessageForm from '../../components/MessageForm.jsx';
 import SingleMessage from '../../components/SingleMessage.jsx';
 
 
@@ -19,12 +17,7 @@ const message  = Astro.props;
 ---
 <Layout title="Welcome to messaging app">
 	<main>
-		<SingleMessage messageId={message.id} client:load>
-			<Card {...message} />
-			<div class="message-card">
-				<MessageForm placeholder="Reply your thoughts" messageId={message.id} client:visible />
-			</div>
-		</SingleMessage>
+		<SingleMessage message={message} client:load />
 	</main>
 </Layout>
 
