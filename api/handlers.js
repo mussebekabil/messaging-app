@@ -3,47 +3,39 @@ import * as userServices from './database/userServices.js';
 import * as queueServices from './queueServices.js';
 
 export const handleGetRequests = async (request) => {
-  const pathname = new URL(request.url).pathname;
+  const {pathname, search } = new URL(request.url);
   
   if(pathname.includes('messages')) {
     const params = pathname.split('/')
-    console.log(params)
+    const query = search.split('offset=')
     const messageId = params[3];
     if(messageId) {
-      return {
-        message: await messageServices.getMessageById(messageId)
-      }
+      return await messageServices.getMessageById(messageId) || []
     }
-    return {
-      messages: await messageServices.getAllMessages()
-    };
+
+    return await messageServices.getAllMessages(query[1]) || []
   }
 
   if(pathname.includes('replies')) {
     const params = pathname.split('/')
     console.log(params)
+    const query = search.split('offset=')
+    
     const messageId = params[3];
     if(messageId) {
-      return {
-        replies: await messageServices.getRepliesByMessageId(messageId)
-      }
+      return await messageServices.getRepliesByMessageId(messageId, query[1]) || []
     }
-    return {
-      replies: []
-    };
+
+    return [];
   }
 
   if(pathname.includes('users')) {
     const params = pathname.split('/')
     const userId = params[3];
     if(userId) {
-      return {
-        user: await userServices.getUserById(userId)
-      }
+      return await userServices.getUserById(userId) || {}
     }
-    return {
-      users: await userServices.getAllUsers()
-    };
+    return await userServices.getAllUsers() || [];
   }
   return {};
 }

@@ -4,7 +4,7 @@ import './Card.css';
 
 const Card = ({ id, content, message_id, vote, created_at }) => {
 	const isReplyCard = !!message_id;
-	console.log(content)
+	
 	return (
 		<div id={id} className="link-card">
 			<a href={id && !isReplyCard ? `/messages/${id}` : "#"}>

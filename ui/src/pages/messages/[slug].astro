@@ -5,7 +5,7 @@ import SingleMessage from '../../components/SingleMessage.jsx';
 
 export async function getStaticPaths() {
 	const response = await fetch('http://api:7777/messages');
-	const { messages } = await response.json();
+	const messages = await response.json();
 	
 	return messages.map((message) => ({
 			params: { slug: message.id },
