@@ -9,7 +9,9 @@ export const closeWsConnection = () => {
 }
 
 export const openWsConnection = (handleMessage) => {
-	socket = new WebSocket(`ws://localhost:7800/ws-grader/connect?${getUserId()}`);
+	if(!socket) {
+		socket = new WebSocket(`ws://localhost:7800/ws-messaging/connect?${getUserId()}`);
+	} 
 
 	socket.onerror = (e) => console.error("WebSocket error:", e);
 	socket.onmessage = handleMessage;

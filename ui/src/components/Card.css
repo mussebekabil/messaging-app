@@ -1,22 +1,4 @@
----
-import Voter from './Voter.jsx';
-import MessageForm from './MessageForm.jsx';
-
-const { id, href, title, body, vote, date } = Astro.props;
----
-	<div id={id} class="link-card">
-		<a href={href || "#"}>
-			<p>
-				{body}
-			</p>
-			<span class="date-container">{new Date(date).toLocaleString()}</span>
-		</a>
-		<div class="vote-container">
-			<Voter vote={vote} messageId={id} client:visible />
-		</div>
-	</div>
-<style>
-	.link-card,
+.link-card,
 	.message-card {
 		display: flex;
 		padding: 0.15rem;
@@ -99,5 +81,3 @@ const { id, href, title, body, vote, date } = Astro.props;
 	.grade-container.error {
 		color: red;
 	} */
-
-</style>

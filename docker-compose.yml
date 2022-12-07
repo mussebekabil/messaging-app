@@ -38,6 +38,7 @@ services:
       - ./api/:/app
     ports:
       - 7777:7777
+    #command: ./wait-for-it.sh rabbitmq:5672 -t 60
     depends_on:
       - database
       - flyway

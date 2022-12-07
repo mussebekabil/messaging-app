@@ -5,36 +5,36 @@ import { getUserId } from '../utils/localStorageUtil.js';
 import 'react-toastify/dist/ReactToastify.css';
 import './MessageForm.css';
 
+
 const MessageForm = ({ messageId, placeholder }) => {
-	const [reply, setReply] = useState('');
+	const [content, setContent] = useState('');
 	const [error, setError] = useState('');
-
+	const isReplyForm = messageId; 
+	
 	const handleSubmit = async (e) => {
-	// 	e.preventDefault()
-	// 	setError('');
-	// 	if(!code) {
-	// 		setError('Please write some code before sending to the grader.')
-	// 		return;
-	// 	}
-
-	// 	try {
-	// 		await fetch("/api/grades", {
-	// 			method: "POST",
-	// 			headers: { "Content-type": "application/json; charset=UTF-8" },
-	// 			body: JSON.stringify({ 
-	// 				code,
-	// 				exerciseId,  
-	// 				userId: getUserId()
-	// 			})
-	// 		});
-	// 		setIsDisabled(true)
-			
-	// 		toast.success('Code submitted successfully. You will be notified once the grader is ready.')
-	// 		setCode('')
-	// 	} catch (error) {
-	// 		setError('Something went wrong.')
-	// 		console.log(error)
-	// 	}
+		e.preventDefault()
+		setError('');
+		if(!content) {
+			setError('Please write some content before posting.')
+			return;
+		}
+		const url = isReplyForm ? '/api/replies' : '/api/messages';
+		try {
+			await fetch(url, {
+				method: "POST",
+				headers: { "Content-type": "application/json; charset=UTF-8" },
+				body: JSON.stringify({ 
+					content, 
+					messageId,
+					authorId: getUserId(),
+				})
+			});
+		
+			setContent('')
+		} catch (error) {
+			setError('Something went wrong.')
+			console.log(error)
+		}
 	}
 
 	if(error) {
@@ -47,18 +47,18 @@ const MessageForm = ({ messageId, placeholder }) => {
 			<form>
 				<textarea 
 					className="post-panel" 
-					name="reply"
-					value={reply} 
-					onChange={(e) => {setReply(e.target.value)}} 
-					placeholder={placeholder}
+					name="content"
+					value={content} 
+					onChange={(e) => {setContent(e.target.value)}} 
+					placeholder={isReplyForm ? 'Reply for message' : 'Share your thoughts'}
 				></textarea>
-				<button className="button-primary" onClick={handleSubmit}> Post </button>
-				{/* <button className="button-secondary" 
+				<button className="button-primary" onClick={handleSubmit}> {isReplyForm ? 'Reply' : 'Post'} </button>
+				{isReplyForm && <button className="button-secondary" 
 					onClick={(e) => {
 						e.preventDefault()
 						window.location.assign('/');
 						}} 
-					> Close </button> */}
+					> Go back </button>}
 			</form>
 			<ToastContainer />
 		</div>

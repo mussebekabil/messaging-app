@@ -19,6 +19,20 @@ export const handleGetRequests = async (request) => {
     };
   }
 
+  if(pathname.includes('replies')) {
+    const params = pathname.split('/')
+    console.log(params)
+    const messageId = params[3];
+    if(messageId) {
+      return {
+        replies: await messageServices.getRepliesByMessageId(messageId)
+      }
+    }
+    return {
+      replies: []
+    };
+  }
+
   if(pathname.includes('users')) {
     const params = pathname.split('/')
     const userId = params[3];
@@ -41,8 +55,21 @@ export const handlePostRequests = async (request) => {
     if(request.body) {
       try {
         const { authorId, content } = await request.json();
-        //await messageServices.saveMessage(authorId, content);
         queueServices.publishNewMessage(authorId, content);
+        return new Response(200);
+        
+      } catch (error) {
+        console.log(e)
+        return new Response("Internal Server Error", { status: 500 })
+      }
+    }
+  }
+
+  if(pathname.includes('replies')) {
+    if(request.body) {
+      try {
+        const { authorId, content, messageId } = await request.json();
+        queueServices.publishNewReply(authorId, messageId, content);
         return new Response(200);
         
       } catch (error) {
@@ -77,8 +104,23 @@ export const handlePatchRequests = async (request) => {
         const { vote } = await request.json();
         const params = pathname.split('/')
         const messageId = params[3];
-        //await messageServices.updateMessageVote(messageId, vote);
         queueServices.publishMessageVote(messageId, vote);
+        return new Response(200);
+        
+      } catch (error) {
+        console.log(error)
+        return new Response("Internal Server Error", { status: 500 })
+      }
+    }
+  }
+
+  if(pathname.includes('replies')) {
+    if(request.body) {
+      try {
+        const { vote } = await request.json();
+        const params = pathname.split('/')
+        const replyId = params[3];
+        queueServices.publishReplyVote(replyId, vote);
         return new Response(200);
         
       } catch (error) {

@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Card from '../../components/Card.astro';
-import MessageForm from '../../components/MessageForm.jsx';
+import SingleMessage from '../../components/SingleMessage.jsx';
 
 
 export async function getStaticPaths() {
@@ -14,31 +13,11 @@ export async function getStaticPaths() {
 		}
 	))
 }
-
-const {id, content, author_id, vote, created_at } = Astro.props;
+const message  = Astro.props;
 ---
-<!-- <script>
-	import { disableReSubmission, initWsConnection } from '../../utils/scripts.js';
-	
-	// Initialize websocket 
-	initWsConnection()
-	
-	// Show grade and disable submission if exercise is already submitted
-	disableReSubmission();
-
-</script> -->
 <Layout title="Welcome to messaging app">
 	<main>
-		<Card
-			id={id}
-			title={author_id}
-			body={content}
-			vote={vote}
-			date={created_at}
-		/>
-		<div class="message-card">
-			<MessageForm placeholder="Reply your thoughts" messageId={id} client:visible />
-		</div>
+		<SingleMessage message={message} client:load />
 	</main>
 </Layout>
 
