@@ -2,18 +2,14 @@
 import Layout from '../../layouts/Layout.astro';
 import SingleMessage from '../../components/SingleMessage.jsx';
 
+const response = await fetch('http://api:7777/messages');
+const messages = await response.json();	
+const { slug } = Astro.params;
+const message = messages.find(m => m.id == slug);
 
-export async function getStaticPaths() {
-	const response = await fetch('http://api:7777/messages');
-	const messages = await response.json();
-	
-	return messages.map((message) => ({
-			params: { slug: message.id },
-			props: {...message}
-		}
-	))
+if(!message) {
+	return Astro.redirect("/404");
 }
-const message  = Astro.props;
 ---
 <Layout title="Welcome to messaging app">
 	<main>

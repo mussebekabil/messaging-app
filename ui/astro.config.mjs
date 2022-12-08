@@ -9,5 +9,6 @@ export default defineConfig({
     port: 7778,
     host: "0.0.0.0"
   },
-  integrations: [react()]
+  integrations: [react()],
+  output: 'server' // enable SSR for dynamic routing
 });
