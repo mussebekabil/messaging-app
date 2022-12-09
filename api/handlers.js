@@ -8,7 +8,8 @@ export const handleGetRequests = async (request) => {
   if(pathname.includes('messages')) {
     const params = pathname.split('/')
     const query = search.split('offset=')
-    const messageId = params[3];
+    const messageId = params.includes('api') ? params[3] : params[2];
+  
     if(messageId) {
       return await messageServices.getMessageById(messageId) || []
     }
@@ -18,10 +19,9 @@ export const handleGetRequests = async (request) => {
 
   if(pathname.includes('replies')) {
     const params = pathname.split('/')
-    console.log(params)
     const query = search.split('offset=')
     
-    const messageId = params[3];
+    const messageId = params.includes('api') ? params[3] : params[2];
     if(messageId) {
       return await messageServices.getRepliesByMessageId(messageId, query[1]) || []
     }
@@ -31,7 +31,7 @@ export const handleGetRequests = async (request) => {
 
   if(pathname.includes('users')) {
     const params = pathname.split('/')
-    const userId = params[3];
+    const userId = params.includes('api') ? params[3] : params[2];
     if(userId) {
       return await userServices.getUserById(userId) || {}
     }

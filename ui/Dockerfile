@@ -7,7 +7,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
 
 # install node dependencies
-RUN echo "npm install in progress..." && npm ci && npm cache clean --force
+RUN echo "npm install in progress..." && npm ci
 
 EXPOSE 7778
 

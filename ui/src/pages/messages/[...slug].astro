@@ -2,18 +2,17 @@
 import Layout from '../../layouts/Layout.astro';
 import SingleMessage from '../../components/SingleMessage.jsx';
 
-const response = await fetch('http://api-service:7777/messages');
-const messages = await response.json();	
 const { slug } = Astro.params;
-const message = messages.find(m => m.id == slug);
+const response = await fetch(`http://api-service:7777/messages/${slug}`)
+const message = await response.json();	
 
-if(!message) {
+if(message.length === 0) {
 	return Astro.redirect("/404");
 }
 ---
 <Layout title="Welcome to messaging app">
 	<main>
-		<SingleMessage message={message} client:load />
+		<SingleMessage message={message[0]} client:load />
 	</main>
 </Layout>
 

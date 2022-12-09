@@ -20,7 +20,7 @@ await channel.declareQueue({ queue: constants.MESSAGE_QUEUE_NAME });
 await channel.consume({ queue: constants.MESSAGE_QUEUE_NAME }, async (args, props, data) => {
   const { authorId, content } = JSON.parse(new TextDecoder().decode(data));
   const response = await messageServices.saveMessage(authorId, content)
-  console.log('response: ', response)
+  
   await fetch(`http://ws-messaging-service:7779`, {
     method: 'POST',
     headers: { "Content-type": "application/json; charset=UTF-8" },

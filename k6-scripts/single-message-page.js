@@ -13,7 +13,7 @@ export const options = {
 }
 
 export default function() {
-  const res = http.get(`${BASE_URL}`)
-  check(res, { [`Load main page success`]: (r) => r.status == 200 });
+  const res = http.get(`${BASE_URL}/messages/1`)
+  check(res, { [`Load single message page success`]: (r) => r.status == 200 });
   sleep(SLEEP_DURATION);
 }

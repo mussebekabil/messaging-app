@@ -46,7 +46,7 @@ const Messages = () => {
 				default:
 					break;
 			}
-			console.log('ws data: ', data)
+
 			return false;
 	}
 
@@ -54,11 +54,10 @@ const Messages = () => {
 		openWsConnection(handleMessage);
 
 		return () => {
-			console.log('unmounted')
 			closeWsConnection()
 		}
 	}, [items])
-	console.log('should be fine till here: ', observer)
+
 	if(error) toast(error.toString())
 	
 	return (

@@ -23,7 +23,7 @@ function useFetch(baseUrl, offset) {
           setHasMore(updatedItems.length < updatedItems[0]?.count)
           setIsLoading(false)
       } catch (error) {
-        console.log('caused by fetch: ', error)
+        console.log(error)
         setError(error.toString())
         setIsLoading(false)
       }

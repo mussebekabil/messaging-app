@@ -50,7 +50,7 @@ const SingleMessage = ({ message }) => {
 				default:
 					break;
 			}
-			console.log('ws data: ', data)
+
 			return false;
 	}
 
@@ -58,14 +58,13 @@ const SingleMessage = ({ message }) => {
 		openWsConnection(handleMessage);
 
 		return () => {
-			console.log('unmounted')
 			closeWsConnection()
 		}
 	}, [items])
 
 	useEffect(() => {
 		setSafeMessage(message)
-	})
+	}, [])
 	
 	if(error) toast(error.toString())
 

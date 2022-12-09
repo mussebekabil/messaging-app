@@ -1,13 +1,5 @@
 # Runbook
 
-All the needed services are added to `docker-compose` file. To start the project run this command from the project parent directory.
-
-```console
-docker-compose up --build
-```
-
-Go to the homepage from http://localhost:7800. API endpoints can be accessed from http://localhost:7800/api/. Use the following endpoints to check the available data in the database.
-
 ## API Endpoints
 
 `GET /api/messages`
@@ -91,29 +83,29 @@ Request payload
 
 Update reply vote identified by `replyId`. The same as the corresponding `POST` request, it will be published to the queue.
 
-## Queue Service
-
-I used rabbitmq as a queue service. The service runs on port `5672`. You can access rebbitmq ui from [here](http://localhost:15672/) using the default credentials. The portal is a good client if you are interested to track the messaging across the service.
-
-*NOTICE: Building `rabbitmq` takes a little bit longer time, which makes the `api` build fail. I put a "wait for" command in `api` docker file to wait for completion of queue service build with timeout flag `90s`. If the API service is unavailable after build (very less likely to happen), please save one file in the API directory to trigger restart*  
-
-
 ## Running k6-scripts
 
 First, install `k6` script if it's not yet installed in your machine. Installation guide can be found [here](https://k6.io/docs/get-started/installation/).
 
-We have *three* k6 test scripts under `k6-scripts` folder.
+We have *five* k6 test scripts under `k6-scripts` folder. Run the tests in such order so messages and replies are created first.
 
+- `api-create-message.js` - For API endpoint used for creating new post
+- `api-create-reply.js` - For API endpoint used for creating new message reply
+- `api-get-all-messages.js` - For API endpoint used for getting list of messages
+- `single-message-page.js` - For single message page performance test
 - `main-page.js` - For main page performance test
-- `exercise-submission.js` - For API endpoint used for submission without cache (each submission has unique payload)
-- `cached-exercise-submission.js` - For API endpoint used for submission with cache (same code submission)
 
 For example, run the scripts as follows
 
 ```console
-k6 run  k6-scripts/exercise-submission.js   
+k6 run k6-scripts/api-create-message.js  
 ```
 
+You can run the following command to follow the autoscaling while the test is running.
+
+```console
+kubectl get hpa -w 
+```
 
 ## Steps for kubernetes deploy
 
@@ -166,6 +158,12 @@ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg
 
 ```console
 kubectl apply -f kubernetes/database-config.yaml
+```
+
+Wait a while until the database cluster and secrets created. Or at least check if secrets are created 
+
+```console
+kubectl get secrets database-cluster-app
 ```
 
 ```console
