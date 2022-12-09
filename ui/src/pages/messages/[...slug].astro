@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import SingleMessage from '../../components/SingleMessage.jsx';
 
-const response = await fetch('http://api:7777/messages');
+const response = await fetch('http://api-service:7777/messages');
 const messages = await response.json();	
 const { slug } = Astro.params;
 const message = messages.find(m => m.id == slug);

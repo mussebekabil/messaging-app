@@ -4,7 +4,7 @@ import { openWsConnection, closeWsConnection } from '../utils/wsUtil.js';
 import MessageForm from './MessageForm.jsx';
 import Card from './Card.jsx';
 import * as constants from '../utils/constants.js';
-import useFetch from '../../hooks/useFetch.js';
+import useFetch from '../hooks/useFetch.js';
 
 import 'react-toastify/dist/ReactToastify.css';
 

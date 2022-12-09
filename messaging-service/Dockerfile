@@ -9,8 +9,9 @@ COPY . .
 RUN deno cache app.js
 
 # Ensure rights
-RUN chmod +x wait-for-it.sh
+# RUN chmod +x wait-for-it.sh
 
 RUN deno cache app.js
 
-CMD ["./wait-for-it.sh", "rabbitmq:5672", "-t", "90", "--", "deno","run", "--watch", "--allow-net", "--allow-read", "--allow-run", "--allow-env", "--allow-write", "--no-check", "app.js" ]
+# "./wait-for-it.sh", "rabbitmq:5672", "-t", "90", "--", "deno",
+CMD ["run", "--watch", "--allow-net", "--allow-read", "--allow-run", "--allow-env", "--allow-write", "--no-check", "--unstable", "app.js" ]

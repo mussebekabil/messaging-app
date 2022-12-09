@@ -2,7 +2,18 @@ import { rabbitConnect } from "./deps.js";
 import * as messageServices from './database/messageServices.js';
 import * as constants from './constants.js'; 
 
-const connection = await rabbitConnect(constants.URL) 
+const getConnectionString = () => {
+  const host = Deno.env.get("RABBIT_HOST");
+  const port = Deno.env.get("RABBIT_PORT");
+  const user = Deno.env.get("RABBIT_USER");
+  const password = Deno.env.get("RABBIT_PASS");
+
+  if(!host || !port || !user || !password) return constants.URL;
+
+  return `amqp://${user}:${password}@${host}:${port}`
+}
+
+const connection = await rabbitConnect(getConnectionString())  
 const channel = await connection.openChannel();
 
 await channel.declareQueue({ queue: constants.MESSAGE_QUEUE_NAME });
