@@ -21,10 +21,12 @@ await channel.consume({ queue: constants.MESSAGE_QUEUE_NAME }, async (args, prop
   const { authorId, content } = JSON.parse(new TextDecoder().decode(data));
   const response = await messageServices.saveMessage(authorId, content)
   
+  if(!response || response.length === 0) return
+
   await fetch(`http://ws-messaging-service:7779`, {
     method: 'POST',
     headers: { "Content-type": "application/json; charset=UTF-8" },
-		body: JSON.stringify({ ...response, type: constants.MESSAGE_TYPE, authorId, content })
+		body: JSON.stringify({ ...response[0], type: constants.MESSAGE_TYPE, authorId, content })
   });
 
   await channel.ack({ deliveryTag: args.deliveryTag });
@@ -34,10 +36,13 @@ await channel.declareQueue({ queue: constants.REPLY_QUEUE_NAME });
 await channel.consume({ queue: constants.REPLY_QUEUE_NAME }, async (args, props, data) => {
   const { authorId, messageId, content } = JSON.parse(new TextDecoder().decode(data));
   const response = await messageServices.saveMessageReply(authorId, messageId, content)
+  
+  if(!response || response.length === 0) return
+  
   await fetch(`http://ws-messaging-service:7779`, {
     method: 'POST',
     headers: { "Content-type": "application/json; charset=UTF-8" },
-		body: JSON.stringify({ ...response, type: constants.REPLY_TYPE, authorId, messageId, content })
+		body: JSON.stringify({ ...response[0], type: constants.REPLY_TYPE, authorId, messageId, content })
   });
   
   await channel.ack({ deliveryTag: args.deliveryTag });
