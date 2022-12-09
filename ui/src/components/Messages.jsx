@@ -4,7 +4,7 @@ import { openWsConnection, closeWsConnection } from '../utils/wsUtil.js'
 import Card from './Card.jsx';
 import MessageForm from './MessageForm.jsx';
 import * as constants from '../utils/constants.js';
-import useFetch from '../../hooks/useFetch.js';
+import useFetch from '../hooks/useFetch.js';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -58,7 +58,7 @@ const Messages = () => {
 			closeWsConnection()
 		}
 	}, [items])
-
+	console.log('should be fine till here: ', observer)
 	if(error) toast(error.toString())
 	
 	return (

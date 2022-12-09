@@ -1,0 +1,13 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  labels:
+    app: rabbitmq
+  annotations:
+    some: annotation
+  name: rabbitmqcluster
+spec:
+  image: rabbitmq:3.9-management
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_stream

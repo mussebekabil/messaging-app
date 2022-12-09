@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ui
+  name: ws-messaging
 spec:
-  replicas: 1
+  #replicas: 3
   selector:
     matchLabels:
-      app: ui
+      app: ws-messaging
   template:
     metadata:
       labels:
-        app: ui
+        app: ws-messaging
     spec:
       containers:
-        - name: ui
-          image: ui:latest
+        - name: ws-messaging
+          image: ws-messaging:latest
           imagePullPolicy: Never
           ports:
-            - containerPort: 7778
+            - containerPort: 7779

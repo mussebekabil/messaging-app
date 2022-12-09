@@ -10,7 +10,7 @@ export const closeWsConnection = () => {
 
 export const openWsConnection = (handleMessage) => {
 	if(!socket) {
-		socket = new WebSocket(`ws://localhost:7800/ws-messaging/connect?${getUserId()}`);
+		socket = new WebSocket(`ws://localhost:7779/connect?${getUserId()}`);
 	} 
 
 	socket.onerror = (e) => console.error("WebSocket error:", e);

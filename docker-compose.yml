@@ -83,10 +83,6 @@ services:
     build: messaging-service
     image: messaging-service
     restart: "no"
-    # volumes:
-    #   - ./api/:/app
-    # ports:
-    #   - 7777:7777
     depends_on:
       - database
       - flyway

@@ -4,6 +4,9 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 
 // https://astro.build/config
+// import netlify from "@astrojs/netlify/functions";
+
+// https://astro.build/config
 export default defineConfig({
   server: {
     port: 7778,
@@ -11,4 +14,5 @@ export default defineConfig({
   },
   integrations: [react()],
   output: 'server' // enable SSR for dynamic routing
+  // ,adapter: netlify()
 });

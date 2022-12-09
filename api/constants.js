@@ -9,5 +9,5 @@ export const REPLY_QUEUE_NAME = `${REPLY_TYPE}.queue`;
 export const MESSAGE_VOTE_QUEUE_NAME = `${MESSAGE_VOTE_TYPE}.queue`;
 export const REPLY_VOTE_QUEUE_NAME = `${REPLY_VOTE_TYPE}.queue`;
 
-// should be in the env
+// minikube should take from env
 export const URL = 'amqp://guest:guest@rabbitmq:5672';

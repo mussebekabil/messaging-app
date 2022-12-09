@@ -1,0 +1,20 @@
+FROM node:lts-alpine3.16 as build
+
+WORKDIR /app
+
+COPY . .
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+
+# install node dependencies
+RUN echo "npm install in progress..." && npm ci && npm cache clean --force
+
+RUN mkdir -p dist
+
+#CMD [ "npm", "run", "build" ]
+RUN npm run build 
+
+# Exposes port 80 by default
+FROM rtsp/lighttpd
+COPY --from=build /app/dist /var/www/html

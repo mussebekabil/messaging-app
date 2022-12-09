@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 function useFetch(baseUrl, offset) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -21,10 +21,10 @@ function useFetch(baseUrl, offset) {
           const updatedItems = [...new Set([...items, ...result])];
           setItems(updatedItems)
           setHasMore(updatedItems.length < updatedItems[0]?.count)
+          setIsLoading(false)
       } catch (error) {
-        console.log(error)
+        console.log('caused by fetch: ', error)
         setError(error.toString())
-      } finally {
         setIsLoading(false)
       }
 		}

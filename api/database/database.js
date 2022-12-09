@@ -6,21 +6,19 @@ const getPoolParams = () => {
   let PGPASS = Deno.env.get("PGPASS");
   if(PGPASS) {
     const PGPASS_PARTS = PGPASS.trim().split(":");
-    
-    const host = PGPASS_PARTS[0];
+    const hostname = PGPASS_PARTS[0];
     const port = PGPASS_PARTS[1];
     const database = PGPASS_PARTS[2];
     const user = PGPASS_PARTS[3];
     const password = PGPASS_PARTS[4];
 
-    return { host, user, password, database, port}
+    return { hostname, user, password, database, port}
   } 
 
   return {}
 }
 
 const connectionPool = new Pool(getPoolParams(), CONCURRENT_CONNECTIONS);
-
 const executeQuery = async (query, params) => {
   const response = {};
   let client;

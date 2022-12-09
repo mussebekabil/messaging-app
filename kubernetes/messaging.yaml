@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: messaging
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: messaging
   template:
     metadata:
       labels:
-        app: api
+        app: messaging
     spec:
       containers:
-        - name: api
-          image: api:latest
+        - name: messaging
+          image: messaging:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 7777
